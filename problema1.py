@@ -72,5 +72,4 @@ if __name__ == '__main__':
     #Mostrando a quantidade de cpf e cnpj válidos
     print(df.groupby(['cpf_valido'])['cpf_valido'].count())
     print(df.groupby(['cnpj_valido'])['cpf_valido'].count())
-    report2.to_csv(project_dir+'/report_estado.csv')
     
