@@ -2,7 +2,10 @@ import pandas as pd
 import re
 from utils import utils
 import os
-import pyarrow
+from fastparquet import write 
+
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 #definindo as variáveis
 
@@ -60,19 +63,14 @@ if __name__ == '__main__':
     print(df['idade'].mean())
     report_list ={'Media de Idade':[df['idade'].mean()], 'Quantidade de Clientes':[df['nomes'].nunique()]}
     report1 = pd.DataFrame(report_list)
-    report1.to_parquet(project_dir'/report1.parquet')
+    write(project_dir+'/report1.parquet', report1)
+    
     #Agrupando os dados por estado
-    #Tem que fazer uma normalização nos dados de estado
-    #veja que tem SP, sao paulo, são paulo, tem que limpar isso
-    #assim como tem RJ.... e distrito federal.. tem que normalizar isso tb
     report2= pd.DataFrame({'quantidade cliente': df.groupby('estado')['nomes'].nunique()})
-    ###xxx = xx.tolist()
+    write(project_dir+'/report_estado1.parquet', report2)
+    
     #Mostrando a quantidade de cpf e cnpj válidos
-    #eu nao encontrei nenhum inválido... nao entendi direito o que é válido ou inválido
-    #o processo tá usando um validador que baixei do google
     print(df.groupby(['cpf_valido'])['cpf_valido'].count())
     print(df.groupby(['cnpj_valido'])['cpf_valido'].count())
-    report2.to_parquet(project_dir+'/report_estado.parquet')
-    report2.to_csv(project_dir'/report_estado.csv')
-
-
+    report2.to_csv(project_dir+'/report_estado.csv')
+    
